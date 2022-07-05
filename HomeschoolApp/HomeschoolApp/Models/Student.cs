@@ -6,12 +6,37 @@ namespace HomeschoolApp.Models
 {
     public class Student
     {
-        int Id { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        DateTime Dob { get; set; }
-        int? Picture { get; set; }
-        int YearLevel { get; set; }
-        string Notes { get; set; }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime Dob { get; set; }
+        public Sex Sex { get; set; }
+        public int YearLevel { get; set; }
+        public int Picture { get; set; }
+        public string Notes { get; set; }
+
+        bool IsDeleted { get; set; }
+
+        public Student()
+        {
+        }
+
+        public Student(string firstName, string lastName, Sex sex, int yearLevel)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Dob = DateTime.Now;
+            this.Sex = sex;
+            this.Picture = -1;
+            this.YearLevel = yearLevel;
+            this.Notes = "";
+            this.IsDeleted = false;
+        }
+    }
+
+    public enum Sex
+    {
+        M,
+        F
     }
 }

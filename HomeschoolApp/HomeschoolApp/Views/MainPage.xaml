@@ -15,7 +15,25 @@
             <Label Text="Homeschool App: Main Page" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
         </Frame>
 
-        <Label Text="Hello" FontSize="16"/>
+        <ScrollView>
+            <StackLayout Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Picker Grid.Column="0" x:Name="pickerStudent"  Title="Choose student" SelectedIndexChanged="onPickerStudentSelectedIndexChanged" />
+                    <Button Grid.Column="1" x:Name="btnEditStudent" Text="Create/edit student" Clicked="onBtnEditStudentClicked" />
+                </Grid>
+
+                <Label x:Name="feedback" Text="..."/>
+            </StackLayout>
+        </ScrollView>
+
     </StackLayout>
 
     <!--

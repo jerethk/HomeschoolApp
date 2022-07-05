@@ -7,8 +7,8 @@ namespace HomeschoolApp.Models
     // This class represents records from the table which associates students and activities
     public class ActivityStudent
     {
-        int Id { get; set; }
-        int Activity { get; set; }
-        int Student { get; set; }
+        public int Id { get; set; }
+        public int Activity { get; set; }
+        public int Student { get; set; }
     }
 }

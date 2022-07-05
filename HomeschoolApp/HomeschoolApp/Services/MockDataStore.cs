@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace HomeschoolApp.Services
 {
+    
+    /*
     public class MockDataStore : IDataStore<Item>
     {
         readonly List<Item> items;
@@ -57,4 +59,6 @@ namespace HomeschoolApp.Services
             return await Task.FromResult(items);
         }
     }
+
+    */
 }
