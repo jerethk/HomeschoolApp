@@ -69,7 +69,41 @@ namespace HomeschoolApp.Views
 
         private void OnBtnSaveClicked(object sender, EventArgs e)
         {
+            string errorString = "";
 
+            if (CheckBoxNewStudent.IsChecked)
+            {
+                // Add new student
+                // validation
+
+                Student newStudent = new Student();
+                newStudent.FirstName = entryFirstName.Text;
+                newStudent.LastName = entryLastName.Text;
+                newStudent.Dob = pickerDob.Date;
+                newStudent.Sex = (pickerSex.SelectedIndex == 0) ? Sex.M : Sex.F;
+                newStudent.YearLevel = pickerYearLevel.SelectedIndex;
+                newStudent.Notes = editorNotes.Text;
+                DataAccess.AddNewStudent(newStudent, out errorString);
+            }
+            else
+            {
+                // Update student details
+                // validation
+
+                Student updatedStudent = new Student();
+                updatedStudent.Id = selectedStudent.Id;
+                updatedStudent.FirstName = entryFirstName.Text;
+                updatedStudent.LastName = entryLastName.Text;
+                updatedStudent.Dob = pickerDob.Date;
+                updatedStudent.Sex = (pickerSex.SelectedIndex == 0) ? Sex.M : Sex.F;
+                updatedStudent.YearLevel = pickerYearLevel.SelectedIndex;
+                updatedStudent.Notes = editorNotes.Text;
+                
+                DataAccess.UpdateStudent(updatedStudent, out errorString);
+            }
+
+            DisplayAlert("", "Done", "Ok");
+            label1.Text = errorString;
         }
 
         private void UpdateFields()

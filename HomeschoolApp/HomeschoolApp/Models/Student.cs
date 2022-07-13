@@ -19,6 +19,14 @@ namespace HomeschoolApp.Models
 
         public Student()
         {
+            this.FirstName = "";
+            this.LastName = "";
+            this.Dob = DateTime.Now;
+            this.Sex = Sex.M;
+            this.Picture = -1;
+            this.YearLevel = 0;
+            this.Notes = "";
+            this.IsDeleted = false;
         }
 
         public Student(string firstName, string lastName, Sex sex, int yearLevel)

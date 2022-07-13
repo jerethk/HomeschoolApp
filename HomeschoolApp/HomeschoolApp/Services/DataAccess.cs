@@ -39,7 +39,7 @@ namespace HomeschoolApp.Services
             {
                 dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME));
 
-                dbConnection.Execute("drop table 'students'");
+                //dbConnection.Execute("drop table 'students'");
 
                 // Create Student table
                 string queryString = "CREATE TABLE IF NOT EXISTS 'students' (" +
@@ -56,12 +56,10 @@ namespace HomeschoolApp.Services
 
                 dbConnection.Execute(queryString);
 
-                queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Luke', 'Skywalker', datetime('1999-06-07'), 'M', 0, 2, 'Born on Tatooine and his dad is Vader'); ";
-                dbConnection.Execute(queryString);
-                queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Leia', 'Organa', datetime('1999-06-07 00:00:00.000'), 'F', 0, 6, 'A princess'); ";
-                dbConnection.Execute(queryString);
-                queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Han', 'Solo', datetime('1994-02-07 00:00:00.000'), 'M', 0, 0, 'Friends with Chewbacca who is a Wookie'); ";
-                dbConnection.Execute(queryString);
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Luke', 'Skywalker', datetime('1999-06-07'), 'M', 0, 2, 'Born on Tatooine and his dad is Vader'); ";
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Leia', 'Organa', datetime('1999-06-07 00:00:00.000'), 'F', 0, 6, 'A princess'); ";
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Han', 'Solo', datetime('1994-02-07 00:00:00.000'), 'M', 0, 0, 'Friends with Chewbacca who is a Wookie'); ";
+                //dbConnection.Execute(queryString);
             }
             catch (SQLiteException e)
             {
@@ -127,14 +125,52 @@ namespace HomeschoolApp.Services
             }
         }
 
-        public static void UpdateStudent(Student student)
+        public static bool UpdateStudent(Student student, out string error)
         {
+            error = "no error";
 
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string sex = (student.Sex == Sex.M) ? "M" : "F";
+                    string queryString = $"UPDATE students SET firstName = '{student.FirstName}', lastName = '{student.LastName}', DOB = '{student.Dob.ToString()}', sex = '{sex}', picture = {student.Picture}, yearLevel = {student.YearLevel}, notes='{student.Notes}' " +
+                        $"WHERE id = {student.Id};";
+
+                    dbConnection.Execute(queryString);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public static void AddNewStudent(Student student)
+        public static bool AddNewStudent(Student student, out string error)
         {
+            error = "no error";
 
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string sex = (student.Sex == Sex.M) ? "M" : "F";
+                    string queryString = $"INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) " +
+                        $"VALUES ('{student.FirstName}', '{student.LastName}', '{student.Dob}', '{sex}', {student.Picture}, {student.YearLevel}, '{student.Notes}');";
+                    
+                    dbConnection.Execute(queryString);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return false;
+                }
+            }
+
+            return true;
         }
 
     }
