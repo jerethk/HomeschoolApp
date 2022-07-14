@@ -12,10 +12,13 @@ using Xamarin.Forms.Xaml;
 namespace HomeschoolApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
+    [QueryProperty("IncomingId", "student")]
     public partial class StudentEditor : ContentPage
     {
-        private List<Student> studentList;
-        private Student selectedStudent;
+        private List<Student> studentList { get; set; }
+        private Student selectedStudent { get; set; }
+
+        public string IncomingId { get; set; }
 
         public StudentEditor()
         {
@@ -31,12 +34,25 @@ namespace HomeschoolApp.Views
 
             if (studentList != null)
             {
-                pickerStudent.ItemsSource = studentList;
-                pickerStudent.ItemDisplayBinding = new Binding("FirstName");
-                pickerStudent.SelectedIndex = 0;
-
                 CheckBoxNewStudent.IsChecked = false;
                 pickerStudent.IsEnabled = true;
+
+                // go to selected student (passed from main page)
+                pickerStudent.ItemsSource = studentList;
+                pickerStudent.ItemDisplayBinding = new Binding("FirstName");
+                int studentId = Int32.Parse(IncomingId);
+                int index = -1;
+                for (int i = 0; i < studentList.Count; i++)
+                {
+                    if (studentList[i].Id == studentId)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+
+                pickerStudent.SelectedIndex = index;
+                //label1.Text = IncomingId;
             }
         }
 
@@ -67,7 +83,7 @@ namespace HomeschoolApp.Views
             UpdateFields();
         }
 
-        private void OnBtnSaveClicked(object sender, EventArgs e)
+        private async void OnBtnSaveClicked(object sender, EventArgs e)
         {
             string errorString = "";
 
@@ -102,8 +118,9 @@ namespace HomeschoolApp.Views
                 DataAccess.UpdateStudent(updatedStudent, out errorString);
             }
 
-            DisplayAlert("", "Done", "Ok");
-            label1.Text = errorString;
+            label1.Text = errorString; 
+            await DisplayAlert("", "Done", "Ok");
+            await Shell.Current.GoToAsync("..");
         }
 
         private void UpdateFields()

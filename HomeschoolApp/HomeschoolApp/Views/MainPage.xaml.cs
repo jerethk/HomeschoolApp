@@ -47,7 +47,15 @@ namespace HomeschoolApp.Views
 
         private async void onBtnEditStudentClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(nameof(StudentEditor));
+            int id = -1;
+            
+            if (selectedStudent != null)
+            {
+                id = selectedStudent.Id;
+            }
+
+            //await DisplayAlert("", nameof(StudentEditor) + $"?student={id}", "ok");
+            await Shell.Current.GoToAsync(nameof(StudentEditor) + $"?student={id}");
         }
     }
 }
