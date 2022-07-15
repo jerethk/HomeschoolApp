@@ -6,7 +6,7 @@
 
         <ScrollView>
             <StackLayout>
-                <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+                <Frame BackgroundColor="#2196F3" Padding="16" CornerRadius="0">
                     <Label Text="Student Editor" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
                 </Frame>
 
@@ -23,13 +23,13 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" Text="First Name" />
                     <Entry Grid.Row="0" Grid.Column="1 " x:Name="entryFirstName" Placeholder="" />

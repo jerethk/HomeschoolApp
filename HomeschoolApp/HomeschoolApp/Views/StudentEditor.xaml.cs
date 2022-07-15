@@ -15,8 +15,8 @@ namespace HomeschoolApp.Views
     [QueryProperty("IncomingId", "student")]
     public partial class StudentEditor : ContentPage
     {
-        private List<Student> studentList { get; set; }
-        private Student selectedStudent { get; set; }
+        private List<Student> studentList;
+        private Student selectedStudent;
 
         public string IncomingId { get; set; }
 

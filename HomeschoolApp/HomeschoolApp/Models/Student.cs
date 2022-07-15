@@ -47,4 +47,11 @@ namespace HomeschoolApp.Models
         M,
         F
     }
+
+    // Class used to populate pickers
+    public class StudentName
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

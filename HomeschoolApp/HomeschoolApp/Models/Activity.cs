@@ -45,13 +45,13 @@ namespace HomeschoolApp.Models
 
     public enum LearningAreas
     {
-        English,
-        Maths,
-        Science,
-        Humanities,
-        Arts,
-        Tech,
-        HealthPE,
-        Languages
+        English,    //0
+        Maths,      //1
+        Science,    //2
+        HumanitiesSS, //3
+        Arts,       //4
+        Tech,       //5
+        HealthPE,   //6
+        Languages   //7
     }
 }

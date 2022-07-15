@@ -57,5 +57,15 @@ namespace HomeschoolApp.Views
             //await DisplayAlert("", nameof(StudentEditor) + $"?student={id}", "ok");
             await Shell.Current.GoToAsync(nameof(StudentEditor) + $"?student={id}");
         }
+
+        private async void onBtnActivitiesClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(ActivitiesPage));
+        }
+
+        private void onBtnLearningAreasClicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
