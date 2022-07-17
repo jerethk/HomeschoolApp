@@ -31,11 +31,11 @@ namespace HomeschoolApp.Views
             base.OnAppearing();
 
             // create list of learning areas
-            collectionViewLearningAreas.ItemsSource = new List<string> { "English", "Maths", "Science", "Humanities & Social Sciences", "Arts", "Tech", "Health & PE", "Languages" }; ;
+            collectionViewLearningAreas.ItemsSource = new List<string> { LearningAreas.ENG, LearningAreas.MAT, LearningAreas.SCI, LearningAreas.HUM, LearningAreas.ART, LearningAreas.TEC, LearningAreas.HEA, LearningAreas.LAN }; ;
 
             // retrieve list of student names for listview
             string errorMessage = "";
-            var studentList = DataAccess.queryAllStudents(out errorMessage);
+            var studentList = DataAccess.QueryAllStudents(out errorMessage);
             students = (from student in studentList
                         select new StudentName()
                         {
@@ -45,11 +45,67 @@ namespace HomeschoolApp.Views
             collectionViewStudents.ItemsSource = students;
             
             label1.Text = $"{Mode} {ActivityId}";
+
+            //
+            if (Mode == "new")
+            {
+                pageHeading.Text = "New Activity";
+                entryDuration.Text = "30";
+            }
+            else if (Mode == "edit")
+            {
+                pageHeading.Text = "Edit Activity";
+            }
         }
 
-        private void clickmeed(object sender, EventArgs e)
+        private void clickme(object sender, EventArgs e)
         {
             label1.Text = $"{entryDuration.Height} {collectionViewLearningAreas.Height}";
+        }
+
+        private async void OnBtnSaveClicked(object sender, EventArgs e)
+        {
+            if (Mode == "new")
+            {
+                // validation 
+
+                
+                // Save activity to activities table
+                Activity newActivity = new Activity();
+                newActivity.Title = entryTitle.Text;
+                newActivity.Date = pickerDate.Date.ToString();
+                newActivity.TimeStarted = pickerTimeStarted.Time.ToString();
+                newActivity.DurationMinutes = Int32.Parse(entryDuration.Text);
+                newActivity.Location = entryLocation.Text;
+                newActivity.IsCompleted = checkboxCompleted.IsChecked;
+                newActivity.Description = editorDescription.Text;
+                newActivity.Notes = editorNotes.Text;
+
+                string learningAreasString = "";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ENG)) learningAreasString += "ENG ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.MAT)) learningAreasString += "MAT ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.SCI)) learningAreasString += "SCI ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HUM)) learningAreasString += "HUM ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ART)) learningAreasString += "ART ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.TEC)) learningAreasString += "TEC ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HEA)) learningAreasString += "HEA ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.LAN)) learningAreasString += "LAN ";
+                newActivity.LearningAreas = learningAreasString;
+
+                string errorString = "";
+                int activityId = DataAccess.AddNewActivity(newActivity, out errorString);
+
+                // Save records to Activities-Students table
+                foreach (StudentName student in collectionViewStudents.SelectedItems)
+                {
+                    ActivityStudent activityStudent = new ActivityStudent();
+                    activityStudent.Activity = activityId;
+                    activityStudent.Student = student.Id;
+                    DataAccess.AddActivityStudent(activityStudent, out errorString);
+                }
+
+                await Shell.Current.GoToAsync("..");
+            }
         }
     }
 }

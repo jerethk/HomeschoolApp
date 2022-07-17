@@ -8,18 +8,18 @@ namespace HomeschoolApp.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public DateTime Date { get; set; }
-        public DateTime TimeStarted { get; set; }
+        public string Date { get; set; }
+        public string TimeStarted { get; set; }
         public int DurationMinutes { get; set; }
+        public string LearningAreas { get; set; }
         public string Location { get; set; }
         public bool IsCompleted { get; set; }
         public string Description { get; set; }
         public string Notes { get; set; }
 
-        bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         List<int> Students { get; set; }
-        List<LearningAreas> Subjects { get; set; }
         List<int> Photos { get; set; }
         List<int> Documents { get; set; }
 
@@ -27,9 +27,10 @@ namespace HomeschoolApp.Models
         {
             // Set default values
             Title = "";
-            Date = DateTime.Now;
-            TimeStarted = DateTime.Now;
+            Date = DateTime.Now.ToString();
+            TimeStarted = "";
             DurationMinutes = 0;
+            LearningAreas = "";
             Location = "";
             IsCompleted = true;
             Description = "";
@@ -37,21 +38,10 @@ namespace HomeschoolApp.Models
             IsDeleted = false;
 
             Students = new List<int>();
-            Subjects = new List<LearningAreas>();
             Photos = new List<int>();
             Documents = new List<int>();
         }
     }
-
-    public enum LearningAreas
-    {
-        English,    //0
-        Maths,      //1
-        Science,    //2
-        HumanitiesSS, //3
-        Arts,       //4
-        Tech,       //5
-        HealthPE,   //6
-        Languages   //7
-    }
 }
+
+

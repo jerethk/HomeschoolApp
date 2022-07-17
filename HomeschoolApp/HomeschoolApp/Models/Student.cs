@@ -9,7 +9,7 @@ namespace HomeschoolApp.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime Dob { get; set; }
+        public string Dob { get; set; }
         public Sex Sex { get; set; }
         public int YearLevel { get; set; }
         public int Picture { get; set; }
@@ -21,7 +21,7 @@ namespace HomeschoolApp.Models
         {
             this.FirstName = "";
             this.LastName = "";
-            this.Dob = DateTime.Now;
+            this.Dob = DateTime.Now.ToString();
             this.Sex = Sex.M;
             this.Picture = -1;
             this.YearLevel = 0;
@@ -33,7 +33,7 @@ namespace HomeschoolApp.Models
         {
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.Dob = DateTime.Now;
+            this.Dob = DateTime.Now.ToString() ;
             this.Sex = sex;
             this.Picture = -1;
             this.YearLevel = yearLevel;

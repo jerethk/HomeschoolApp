@@ -5,10 +5,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Frame BackgroundColor="#2196F3" Padding="16" CornerRadius="0">
-                <Label Text="Activity Editor" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
+                <Label x:Name="pageHeading" Text="Activity Editor" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
             </Frame>
-
-            <Button Text="press" Clicked="clickmeed" />
 
             <ScrollView>
                 <Grid>
@@ -63,10 +61,13 @@
                     <Label Grid.Row="10" Grid.Column="0" Text="Photos" />
                     <Label Grid.Row="11" Grid.Column="0" Text="Documents" />
                 </Grid>
-                
+
             </ScrollView>
 
+            <Button x:Name="btnSave" Text="Save" Clicked="OnBtnSaveClicked" />
+
             <Label x:Name="label1" />
+        
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

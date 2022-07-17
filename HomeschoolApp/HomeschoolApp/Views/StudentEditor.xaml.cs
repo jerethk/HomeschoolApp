@@ -30,7 +30,7 @@ namespace HomeschoolApp.Views
             base.OnAppearing();
 
             string errorString;
-            studentList = DataAccess.queryAllStudents(out errorString);
+            studentList = DataAccess.QueryAllStudents(out errorString);
 
             if (studentList != null)
             {
@@ -54,10 +54,22 @@ namespace HomeschoolApp.Views
                 pickerStudent.SelectedIndex = index;
                 //label1.Text = IncomingId;
             }
+
+            // If no students in database, user must create a new one
+            if (studentList == null || studentList.Count == 0)
+            {
+                CheckBoxNewStudent.IsChecked = true;
+            }
         }
 
         private void OnCheckBoxNewStudentChanged(object sender, CheckedChangedEventArgs e)
         {
+            // If no students in database, user must create a new one
+            if (studentList == null || studentList.Count == 0)
+            {
+                CheckBoxNewStudent.IsChecked = true;
+            }
+
             if (CheckBoxNewStudent.IsChecked)
             {
                 pickerStudent.IsVisible = false;
@@ -95,7 +107,7 @@ namespace HomeschoolApp.Views
                 Student newStudent = new Student();
                 newStudent.FirstName = entryFirstName.Text;
                 newStudent.LastName = entryLastName.Text;
-                newStudent.Dob = pickerDob.Date;
+                newStudent.Dob = pickerDob.Date.ToString();
                 newStudent.Sex = (pickerSex.SelectedIndex == 0) ? Sex.M : Sex.F;
                 newStudent.YearLevel = pickerYearLevel.SelectedIndex;
                 newStudent.Notes = editorNotes.Text;
@@ -110,7 +122,7 @@ namespace HomeschoolApp.Views
                 updatedStudent.Id = selectedStudent.Id;
                 updatedStudent.FirstName = entryFirstName.Text;
                 updatedStudent.LastName = entryLastName.Text;
-                updatedStudent.Dob = pickerDob.Date;
+                updatedStudent.Dob = pickerDob.Date.ToString();
                 updatedStudent.Sex = (pickerSex.SelectedIndex == 0) ? Sex.M : Sex.F;
                 updatedStudent.YearLevel = pickerYearLevel.SelectedIndex;
                 updatedStudent.Notes = editorNotes.Text;
@@ -132,13 +144,19 @@ namespace HomeschoolApp.Views
                 // Fill entries with student data
                 entryFirstName.Text = selectedStudent.FirstName;
                 entryLastName.Text = selectedStudent.LastName;
-                pickerDob.Date = selectedStudent.Dob;
+                pickerDob.Date = DateTime.Parse(selectedStudent.Dob);
                 pickerSex.SelectedIndex = (selectedStudent.Sex == Sex.M) ? 0 : 1;
                 pickerYearLevel.SelectedIndex = selectedStudent.YearLevel;
                 //studentImage.
                 editorNotes.Text = selectedStudent.Notes;
+
+                label1.Text = selectedStudent.Dob;
             }
         }
 
+        private void ondatechanged(object sender, DateChangedEventArgs e)
+        {
+            label1.Text = pickerDob.Date.ToString();
+        }
     }
 }

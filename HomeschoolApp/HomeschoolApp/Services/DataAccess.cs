@@ -51,15 +51,47 @@ namespace HomeschoolApp.Services
                     "'picture' INTEGER," +
                     "'yearLevel' INTEGER," +
                     "'notes' TEXT," +
+                    "'isDeleted' INTEGER," +
                     "PRIMARY KEY('id' AUTOINCREMENT)" +
                     ");";
 
                 dbConnection.Execute(queryString);
 
-                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Luke', 'Skywalker', datetime('1999-06-07'), 'M', 0, 2, 'Born on Tatooine and his dad is Vader'); ";
-                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Leia', 'Organa', datetime('1999-06-07 00:00:00.000'), 'F', 0, 6, 'A princess'); ";
-                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Han', 'Solo', datetime('1994-02-07 00:00:00.000'), 'M', 0, 0, 'Friends with Chewbacca who is a Wookie'); ";
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Luke', 'Skywalker', '1999-06-07', 'M', 0, 2, 'Born on Tatooine and his dad is Vader'); ";
+                //dbConnection.Execute(queryString); 
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Leia', 'Organa', '1999-06-07 00:00:00.000', 'F', 0, 6, 'A princess'); ";
+                //dbConnection.Execute(queryString); 
+                //queryString = "INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) VALUES('Han', 'Solo', '1994-02-07 00:00:00.000', 'M', 0, 0, 'Friends with Chewbacca who is a Wookie'); ";
                 //dbConnection.Execute(queryString);
+
+                // Create activities table
+                dbConnection.Execute("drop table 'activities'");
+                queryString = "CREATE TABLE IF NOT EXISTS 'activities' (" +
+                    "id INTEGER," +
+                    "title TEXT," +
+                    "date TEXT," +
+                    "timeStarted TEXT," +
+                    "durationMinutes INTEGER," +
+                    "learningAreas TEXT," +
+                    "location TEXT," +
+                    "isCompleted INTEGER," +
+                    "description TEXT," +
+                    "notes TEXT," +
+                    "isDeleted INTEGER," +
+                    "PRIMARY KEY('id' AUTOINCREMENT)" +
+                    ");";
+
+                dbConnection.Execute(queryString);
+
+                // Create Activities-Students table
+                dbConnection.Execute("drop table 'activities_students'");
+                queryString = "CREATE TABLE 'activities_students' (" +
+                    "id INTEGER," +
+                    "activity INTEGER," +
+                    "student INTEGER," +
+                    "PRIMARY KEY('id' AUTOINCREMENT)" +
+                    ");";
+                dbConnection.Execute(queryString);
             }
             catch (SQLiteException e)
             {
@@ -76,7 +108,7 @@ namespace HomeschoolApp.Services
 
         // STUDENTS  --------------------------------------------------------------------------
 
-        public static List<Student> queryAllStudents(out string error)
+        public static List<Student> QueryAllStudents(out string error)
         {
             error = "no error";
 
@@ -96,7 +128,7 @@ namespace HomeschoolApp.Services
             }
         }
 
-        public static Student queryStudentById(int id, out string error)
+        public static Student QueryStudentById(int id, out string error)
         {
             error = "no error";
 
@@ -161,6 +193,69 @@ namespace HomeschoolApp.Services
                     string queryString = $"INSERT INTO students (firstName, lastName, dob, sex, picture, yearLevel, notes) " +
                         $"VALUES ('{student.FirstName}', '{student.LastName}', '{student.Dob}', '{sex}', {student.Picture}, {student.YearLevel}, '{student.Notes}');";
                     
+                    dbConnection.Execute(queryString);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        // ACTIVITIES  --------------------------------------------------------------------------
+
+        public static List<Activity> QueryAllActivities()
+        {
+            ////
+            ////
+            ////
+            return null;
+        }
+
+        
+        // Insert a new activity and return the activity's auto-generated id
+        public static int AddNewActivity(Activity activity, out string error)
+        {
+            error = "no error";
+            int id = -1;
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string queryString = $"INSERT INTO activities(title, date, timeStarted, durationMinutes, learningAreas, location, isCompleted, description, notes, isDeleted)" +
+                        $"VALUES('{activity.Title}', '{activity.Date}', '{activity.TimeStarted}', {activity.DurationMinutes}, '{activity.LearningAreas}', '{activity.Location}', {activity.IsCompleted}, '{activity.Description}', '{activity.Notes}', {activity.IsDeleted});";
+                    dbConnection.Execute(queryString);
+
+                    // retrieve the id from the sqlite_sequence table
+                    queryString = "SELECT seq FROM sqlite_sequence WHERE name = 'activities'";
+                    var queryResult = dbConnection.Query<SqliteSeq>(queryString);
+                    id = Int32.Parse(queryResult[0].Seq);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return -1;
+                }
+            }
+
+            return id;
+        }
+
+        public static bool AddActivityStudent(ActivityStudent activityStudent, out string error)
+        {
+            error = "no error";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string queryString = $"INSERT INTO activities_students (activity, student) " +
+                        $"VALUES ({activityStudent.Activity}, {activityStudent.Student})";
                     dbConnection.Execute(queryString);
                 }
                 catch (SQLiteException e)

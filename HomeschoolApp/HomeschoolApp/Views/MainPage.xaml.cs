@@ -24,8 +24,9 @@ namespace HomeschoolApp.Views
 
             string errorString = "";
             DataAccess.createSchema1(out errorString);
+            DisplayAlert("", errorString, "ok");
 
-            studentList = DataAccess.queryAllStudents(out errorString);
+            studentList = DataAccess.QueryAllStudents(out errorString);
 
             if (studentList != null)
             {
@@ -63,9 +64,5 @@ namespace HomeschoolApp.Views
             await Shell.Current.GoToAsync(nameof(ActivitiesPage));
         }
 
-        private void onBtnLearningAreasClicked(object sender, EventArgs e)
-        {
-
-        }
     }
 }
