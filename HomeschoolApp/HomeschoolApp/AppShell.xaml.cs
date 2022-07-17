@@ -14,6 +14,7 @@ namespace HomeschoolApp
             Routing.RegisterRoute(nameof(StudentEditor), typeof(StudentEditor));
             Routing.RegisterRoute(nameof(ActivitiesPage), typeof(ActivitiesPage));
             Routing.RegisterRoute(nameof(ActivityEditor), typeof(ActivityEditor));
+            Routing.RegisterRoute(nameof(ActivityViewer), typeof(ActivityViewer));
         }
 
     }

@@ -10,6 +10,21 @@
 
             <StackLayout>
                 <Button x:Name="btnAddActivity" Text="Add Activity" Clicked="onBtnAddActivityClicked" />
+
+                <ScrollView>
+                    <CollectionView x:Name="collectionViewActivities" SelectionMode="Single" SelectionChanged="onActivitySelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" Text="{Binding Title}"/>
+                                    <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" Text="{Binding Date}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <!-- Button x:Name="btnEditActivity" Text="Edit Activity" / -->
             </StackLayout>
 
 

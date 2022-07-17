@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HomeschoolApp.Views.ActivityViewer">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame BackgroundColor="#2196F3" Padding="16" CornerRadius="0">
+                <Label Text="Activity" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
+            </Frame>
+
+            <ScrollView>
+                <StackLayout>
+                    <Label x:Name="labelTitle" FontSize="Title" Text="TITLE" />
+                    <Label x:Name="labelDate" />
+                    <Label x:Name="labelTimeStarted" />
+                    <Label x:Name="labelDuration" />
+                    <Label x:Name="labelStudents" />
+                    <Label x:Name="labelLearningAreas" />
+                    <Label x:Name="labelLocation" />
+                    <Label x:Name="labelCompleted" />
+                    <Label x:Name="labelDescription" />
+                    <Label x:Name="labelNotes" />
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

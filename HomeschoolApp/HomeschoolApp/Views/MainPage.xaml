@@ -30,7 +30,7 @@
                     <Button Grid.Column="1" x:Name="btnEditStudent" Text="Create/edit student" Clicked="onBtnEditStudentClicked" />
                 </Grid>
 
-                <Button x:Name="btnActivities" Text="Activities" Clicked="onBtnActivitiesClicked" />
+                <Button x:Name="btnActivities" Text="All Activities" Clicked="onBtnActivitiesClicked" />
                 <!-- <Button x:Name="btnLearningAreas" Text="Learning Areas" Clicked="onBtnLearningAreasClicked" /> -->
 
                 <Label x:Name="feedback" Text="..."/>

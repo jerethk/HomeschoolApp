@@ -24,7 +24,7 @@ namespace HomeschoolApp.Views
 
             string errorString = "";
             DataAccess.createSchema1(out errorString);
-            DisplayAlert("", errorString, "ok");
+            //DisplayAlert("", errorString, "ok");
 
             studentList = DataAccess.QueryAllStudents(out errorString);
 

@@ -40,6 +40,8 @@ namespace HomeschoolApp.Services
                 dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME));
 
                 //dbConnection.Execute("drop table 'students'");
+                //dbConnection.Execute("drop table 'activities'");
+                //dbConnection.Execute("drop table 'activities_students'");
 
                 // Create Student table
                 string queryString = "CREATE TABLE IF NOT EXISTS 'students' (" +
@@ -65,7 +67,6 @@ namespace HomeschoolApp.Services
                 //dbConnection.Execute(queryString);
 
                 // Create activities table
-                dbConnection.Execute("drop table 'activities'");
                 queryString = "CREATE TABLE IF NOT EXISTS 'activities' (" +
                     "id INTEGER," +
                     "title TEXT," +
@@ -84,8 +85,7 @@ namespace HomeschoolApp.Services
                 dbConnection.Execute(queryString);
 
                 // Create Activities-Students table
-                dbConnection.Execute("drop table 'activities_students'");
-                queryString = "CREATE TABLE 'activities_students' (" +
+                queryString = "CREATE TABLE IF NOT EXISTS 'activities_students' (" +
                     "id INTEGER," +
                     "activity INTEGER," +
                     "student INTEGER," +
@@ -106,6 +106,27 @@ namespace HomeschoolApp.Services
             return returnValue;
         }
 
+        public static bool createSchema2(out string error)
+        {
+            bool returnValue = true;
+            error = "no error";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    returnValue = false;
+                }
+            }
+
+            return returnValue;
+        }
+
         // STUDENTS  --------------------------------------------------------------------------
 
         public static List<Student> QueryAllStudents(out string error)
@@ -116,7 +137,7 @@ namespace HomeschoolApp.Services
             {
                 try
                 {
-                    string queryString = "SELECT * from students";
+                    string queryString = "SELECT * FROM students";
                     var queryResult = dbConnection.Query<Student>(queryString);
                     return queryResult;
                 }
@@ -208,15 +229,54 @@ namespace HomeschoolApp.Services
 
         // ACTIVITIES  --------------------------------------------------------------------------
 
-        public static List<Activity> QueryAllActivities()
+        public static List<Activity> QueryAllActivities(out string error)
         {
-            ////
-            ////
-            ////
-            return null;
+            error = "";
+            
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    var activityList = dbConnection.Query<Activity>("SELECT * FROM activities");
+                    return activityList;
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return null;
+                }
+            }
         }
 
-        
+        public static Activity QueryActivityById(int id, out string error)
+        {
+            error = "";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    var queryResult = dbConnection.Query<Activity>($"SELECT * FROM activities WHERE id = {id}");
+                    
+                    if (queryResult.Count == 1)
+                    {
+                        return queryResult[0];
+                    }
+                    else
+                    {
+                        error = "Unable to query activity";
+                        return null;
+                    }
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return null;
+                }
+            }
+
+        }
+
         // Insert a new activity and return the activity's auto-generated id
         public static int AddNewActivity(Activity activity, out string error)
         {
