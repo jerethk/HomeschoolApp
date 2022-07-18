@@ -16,7 +16,7 @@ namespace HomeschoolApp.Views
     public partial class ActivityViewer : ContentPage
     {
         private Activity activity;
-        
+
         public string ActivityId { get; set; }
 
         public ActivityViewer()
@@ -49,8 +49,8 @@ namespace HomeschoolApp.Views
                 if (activity.LearningAreas.Contains("HUM")) learningAreasString += $"* {LearningAreas.HUM}\n";
                 if (activity.LearningAreas.Contains("ART")) learningAreasString += $"* {LearningAreas.ART}\n";
                 if (activity.LearningAreas.Contains("TEC")) learningAreasString += $"* {LearningAreas.TEC}\n";
-                if (activity.LearningAreas.Contains("HEA")) learningAreasString += $"· {LearningAreas.HEA}\n";
-                if (activity.LearningAreas.Contains("LAN")) learningAreasString += $"· {LearningAreas.LAN}\n";
+                if (activity.LearningAreas.Contains("HEA")) learningAreasString += $"* {LearningAreas.HEA}\n";
+                if (activity.LearningAreas.Contains("LAN")) learningAreasString += $"* {LearningAreas.LAN}\n";
                 labelLearningAreas.Text = learningAreasString;
 
                 string studentsString = "Students:\n";

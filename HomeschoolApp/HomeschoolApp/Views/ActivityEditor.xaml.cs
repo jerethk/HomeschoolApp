@@ -19,7 +19,7 @@ namespace HomeschoolApp.Views
         public string Mode { get; set; }
         public string ActivityId { get; set; }
 
-        private List<StudentName> students;
+        private List<StudentName> allStudents;
         
         public ActivityEditor()
         {
@@ -36,17 +36,17 @@ namespace HomeschoolApp.Views
             // retrieve list of student names for listview
             string errorMessage = "";
             var studentList = DataAccess.QueryAllStudents(out errorMessage);
-            students = (from student in studentList
+            allStudents = (from student in studentList
                         select new StudentName()
                         {
                             Id = student.Id,
                             Name = student.FirstName
                         }).ToList();
-            collectionViewStudents.ItemsSource = students;
+            collectionViewStudents.ItemsSource = allStudents;
             
-            label1.Text = $"{Mode} {ActivityId}";
+            //label1.Text = $"{Mode} {ActivityId}";
 
-            //
+            // Set up page
             if (Mode == "new")
             {
                 pageHeading.Text = "New Activity";
@@ -54,14 +54,47 @@ namespace HomeschoolApp.Views
             }
             else if (Mode == "edit")
             {
-                pageHeading.Text = $"Edit Activity {ActivityId}";
+                pageHeading.Text = $"Edit Activity";
+
+                int id = Int32.Parse(ActivityId);
+                var activity = DataAccess.QueryActivityById(id, out errorMessage);
+                var activityStudents = DataAccess.QueryActivityStudents(id, out errorMessage);
+
+                if (activity != null)
+                {
+                    entryTitle.Text = activity.Title;
+                    pickerDate.Date = DateTime.Parse(activity.Date);
+                    pickerTimeStarted.Time = TimeSpan.Parse(activity.TimeStarted);
+                    entryDuration.Text = activity.DurationMinutes.ToString();
+                    entryLocation.Text = activity.Location;
+                    editorDescription.Text = activity.Description;
+                    editorNotes.Text = activity.Notes;
+                    checkboxCompleted.IsChecked = activity.IsCompleted;
+
+                    if (activity.LearningAreas.Contains("ENG")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.ENG);
+                    if (activity.LearningAreas.Contains("MAT")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.MAT);
+                    if (activity.LearningAreas.Contains("SCI")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.SCI);
+                    if (activity.LearningAreas.Contains("HUM")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.HUM);
+                    if (activity.LearningAreas.Contains("ART")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.ART);
+                    if (activity.LearningAreas.Contains("TEC")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.TEC);
+                    if (activity.LearningAreas.Contains("HEA")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.HEA);
+                    if (activity.LearningAreas.Contains("LAN")) collectionViewLearningAreas.SelectedItems.Add(LearningAreas.LAN);
+
+
+                    foreach (Student student in activityStudents)
+                    {
+                        foreach (StudentName pStudent in allStudents)
+                        {
+                            if (student.Id == pStudent.Id)
+                            {
+                                collectionViewStudents.SelectedItems.Add(pStudent);
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        private void clickme(object sender, EventArgs e)
-        {
-            label1.Text = $"{entryDuration.Height} {collectionViewLearningAreas.Height}";
-        }
 
         private async void OnBtnSaveClicked(object sender, EventArgs e)
         {
@@ -70,53 +103,86 @@ namespace HomeschoolApp.Views
 
             if (isValid)
             {
+                bool isSaveSuccessful = true;
+                
+                Activity activity = new Activity();
+                activity.Title = entryTitle.Text;
+                activity.Date = pickerDate.Date.ToString();
+                activity.TimeStarted = pickerTimeStarted.Time.ToString();
+                activity.DurationMinutes = Int32.Parse(entryDuration.Text);
+                activity.Location = entryLocation.Text;
+                activity.IsCompleted = checkboxCompleted.IsChecked;
+                activity.Description = editorDescription.Text;
+                activity.Notes = editorNotes.Text;
+
+                string learningAreasString = "";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ENG)) learningAreasString += "ENG ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.MAT)) learningAreasString += "MAT ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.SCI)) learningAreasString += "SCI ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HUM)) learningAreasString += "HUM ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ART)) learningAreasString += "ART ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.TEC)) learningAreasString += "TEC ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HEA)) learningAreasString += "HEA ";
+                if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.LAN)) learningAreasString += "LAN ";
+                activity.LearningAreas = learningAreasString;
+
+                string errorString = "";
+
                 if (Mode == "new")
-                { 
-                    // Save activity to activities table
-                    Activity newActivity = new Activity();
-                    newActivity.Title = entryTitle.Text;
-                    newActivity.Date = pickerDate.Date.ToString();
-                    newActivity.TimeStarted = pickerTimeStarted.Time.ToString();
-                    newActivity.DurationMinutes = Int32.Parse(entryDuration.Text);
-                    newActivity.Location = entryLocation.Text;
-                    newActivity.IsCompleted = checkboxCompleted.IsChecked;
-                    newActivity.Description = editorDescription.Text;
-                    newActivity.Notes = editorNotes.Text;
+                {
+                    // Add activity to activities table
+                    int newActivityId = DataAccess.AddNewActivity(activity, out errorString);
 
-                    string learningAreasString = "";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ENG)) learningAreasString += "ENG ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.MAT)) learningAreasString += "MAT ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.SCI)) learningAreasString += "SCI ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HUM)) learningAreasString += "HUM ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.ART)) learningAreasString += "ART ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.TEC)) learningAreasString += "TEC ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.HEA)) learningAreasString += "HEA ";
-                    if (collectionViewLearningAreas.SelectedItems.Contains(LearningAreas.LAN)) learningAreasString += "LAN ";
-                    newActivity.LearningAreas = learningAreasString;
+                    if (newActivityId == -1)
+                    {
+                        isSaveSuccessful = false;
+                    }
+                    else
+                    {
+                        // Insert records to Activities-Students table
+                        foreach (StudentName student in collectionViewStudents.SelectedItems)
+                        {
+                            ActivityStudent activityStudent = new ActivityStudent();
+                            activityStudent.Activity = newActivityId;
+                            activityStudent.Student = student.Id;
+                            isSaveSuccessful = DataAccess.AddActivityStudent(activityStudent, out errorString);
+                        }
+                    }
+                }
+                else if (Mode == "edit")
+                {
+                    // Update activity in activities table
+                    activity.Id = Int32.Parse(ActivityId);
+                    isSaveSuccessful = DataAccess.UpdateActivity(activity, out errorString);
 
-                    string errorString = "";
-                    int activityId = DataAccess.AddNewActivity(newActivity, out errorString);
+                    // Delete previous records in activities_students table
+                    isSaveSuccessful = DataAccess.DeleteActivityStudent(activity.Id, out errorString);
 
-                    // Save records to Activities-Students table
+                    // Insert new records to activities_students table
                     foreach (StudentName student in collectionViewStudents.SelectedItems)
                     {
                         ActivityStudent activityStudent = new ActivityStudent();
-                        activityStudent.Activity = activityId;
+                        activityStudent.Activity = activity.Id;
                         activityStudent.Student = student.Id;
-                        DataAccess.AddActivityStudent(activityStudent, out errorString);
+                        isSaveSuccessful = DataAccess.AddActivityStudent(activityStudent, out errorString);
                     }
+                }
 
+                if (isSaveSuccessful)
+                {
                     await DisplayAlert("", "Activity saved", "ok");
-                    await Shell.Current.GoToAsync("..");
+
+                    string parameters = (Mode == "edit") ? $"?activityid={activity.Id}" : "";
+                    await Shell.Current.GoToAsync(".." + parameters);
+                }
+                else
+                {
+                    await DisplayAlert("", "Failed to save activity", "ok");
                 }
             }
-            else if (Mode == "edit")
-            {
-
-            }
-
         }
 
+        // Method to validate fields, returns false if there is an invalid entry
         private bool ValidateEntries()
         {
             if (entryTitle.Text == "" || entryTitle.Text == null)

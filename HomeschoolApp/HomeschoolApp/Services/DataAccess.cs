@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using HomeschoolApp.Models;
+using System.Threading.Tasks;
 
 namespace HomeschoolApp.Services
 {
@@ -306,6 +307,39 @@ namespace HomeschoolApp.Services
             return id;
         }
 
+        // Update activity
+        public static bool UpdateActivity(Activity activity, out string error)
+        {
+            error = "";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string queryString = "UPDATE activities SET " +
+                        $"title = '{activity.Title}'," +
+                        $"date = '{activity.Date}'," +
+                        $"timeStarted = '{activity.TimeStarted}'," +
+                        $"durationMinutes = {activity.DurationMinutes}," +
+                        $"learningAreas = '{activity.LearningAreas}'," +
+                        $"location = '{activity.Location}'," +
+                        $"isCompleted = {activity.IsCompleted}," +
+                        $"description = '{activity.Description}'," +
+                        $"notes = '{activity.Notes}'" +
+                        $"WHERE id = {activity.Id} ;";
+                    dbConnection.Execute(queryString);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return false; ;
+                }
+            }
+
+            return true;
+        }
+
+        // Add record to activities-students table
         public static bool AddActivityStudent(ActivityStudent activityStudent, out string error)
         {
             error = "no error";
@@ -328,6 +362,28 @@ namespace HomeschoolApp.Services
             return true;
         }
 
+        public static bool DeleteActivityStudent(int ActivityId, out string error)
+        {
+            error = "no error";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string queryString = $"DELETE FROM activities_students WHERE activity = {ActivityId};";
+                    dbConnection.Execute(queryString);
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Query students from activities_students table
         public static List<Student> QueryActivityStudents(int ActivityId, out string error)
         {
             error = "no error";
@@ -336,7 +392,7 @@ namespace HomeschoolApp.Services
             {
                 try
                 {
-                    string queryString = $"SELECT * FROM students " +
+                    string queryString = $"SELECT students.id, students.firstName, students.LastName FROM students " +
                         $"INNER JOIN activities_students ON students.id = activities_students.student " +
                         $"WHERE activities_students.activity = {ActivityId};";
 
