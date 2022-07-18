@@ -328,5 +328,29 @@ namespace HomeschoolApp.Services
             return true;
         }
 
+        public static List<Student> QueryActivityStudents(int ActivityId, out string error)
+        {
+            error = "no error";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    string queryString = $"SELECT * FROM students " +
+                        $"INNER JOIN activities_students ON students.id = activities_students.student " +
+                        $"WHERE activities_students.activity = {ActivityId};";
+
+                    var queryResult = dbConnection.Query<Student>(queryString);
+                    return queryResult;
+
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return null;
+                }
+            }
+        }
+
     }
 }

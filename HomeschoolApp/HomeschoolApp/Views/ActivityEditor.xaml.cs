@@ -54,7 +54,7 @@ namespace HomeschoolApp.Views
             }
             else if (Mode == "edit")
             {
-                pageHeading.Text = "Edit Activity";
+                pageHeading.Text = $"Edit Activity {ActivityId}";
             }
         }
 

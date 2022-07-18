@@ -22,6 +22,8 @@
                     <Label x:Name="labelNotes" />
                 </StackLayout>
             </ScrollView>
+
+            <Button Text="Edit activity" Clicked="OnBtnEditActivityClicked" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
