@@ -33,7 +33,7 @@ namespace HomeschoolApp.Views
             // create list of learning areas
             collectionViewLearningAreas.ItemsSource = new List<string> { LearningAreas.ENG, LearningAreas.MAT, LearningAreas.SCI, LearningAreas.HUM, LearningAreas.ART, LearningAreas.TEC, LearningAreas.HEA, LearningAreas.LAN }; ;
 
-            // retrieve list of student names for listview
+            // retrieve list of student names  
             string errorMessage = "";
             var studentList = DataAccess.QueryAllStudents(out errorMessage);
             allStudents = (from student in studentList

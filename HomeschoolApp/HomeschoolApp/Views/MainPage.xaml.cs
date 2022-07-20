@@ -33,7 +33,7 @@ namespace HomeschoolApp.Views
                 feedback.Text = $"Count {studentList.Count} " + errorString;
                 pickerStudent.ItemsSource = studentList;
                 pickerStudent.ItemDisplayBinding = new Binding("FirstName");
-                pickerStudent.SelectedIndex = 0;
+                //pickerStudent.SelectedIndex = 0;
             }
             else
             {
@@ -43,7 +43,18 @@ namespace HomeschoolApp.Views
 
         private void onPickerStudentSelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedStudent = (Student) pickerStudent.SelectedItem;
+            if (pickerStudent.SelectedIndex >= 0)
+            {
+                selectedStudent = (Student)pickerStudent.SelectedItem;
+
+                string errorMessage = "";
+                List<Activity> activityList = DataAccess.QueryActivitiesByStudent(selectedStudent.Id, out errorMessage);
+                collectionViewActivities.ItemsSource = activityList;
+            }
+            else
+            {
+                collectionViewActivities.ItemsSource = null;
+            }
         }
 
         private async void onBtnEditStudentClicked(object sender, EventArgs e)

@@ -33,6 +33,20 @@
                 <Button x:Name="btnActivities" Text="All Activities" Clicked="onBtnActivitiesClicked" />
                 <!-- <Button x:Name="btnLearningAreas" Text="Learning Areas" Clicked="onBtnLearningAreasClicked" /> -->
 
+                <ScrollView>
+                    <CollectionView x:Name="collectionViewActivities" SelectionMode="Single" >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" Text="{Binding Title}"/>
+                                    <Label Grid.Row="0" Grid.Column="1" FontSize="Medium" Text="{Binding Date}" />
+                                    <Label Grid.Row="1" Text="" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                
                 <Label x:Name="feedback" Text="..."/>
             </StackLayout>
         </ScrollView>

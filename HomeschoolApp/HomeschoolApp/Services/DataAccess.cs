@@ -238,7 +238,28 @@ namespace HomeschoolApp.Services
             {
                 try
                 {
-                    var activityList = dbConnection.Query<Activity>("SELECT * FROM activities");
+                    var activityList = dbConnection.Query<Activity>("SELECT * FROM activities ORDER BY date DESC, timeStarted ASC");
+                    return activityList;
+                }
+                catch (SQLiteException e)
+                {
+                    error = e.ToString();
+                    return null;
+                }
+            }
+        }
+
+        public static List<Activity> QueryActivitiesByStudent(int studentId, out string error)
+        {
+            error = "no error";
+
+            using (dbConnection = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DBFILENAME)))
+            {
+                try
+                {
+                    var activityList = dbConnection.Query<Activity>($"SELECT activities.id, activities.title, activities.date FROM activities " +
+                        $"INNER JOIN activities_students ON activities.Id = activities_students.activity " +
+                        $"WHERE activities_students.student = {studentId};");
                     return activityList;
                 }
                 catch (SQLiteException e)
@@ -275,7 +296,6 @@ namespace HomeschoolApp.Services
                     return null;
                 }
             }
-
         }
 
         // Insert a new activity and return the activity's auto-generated id
